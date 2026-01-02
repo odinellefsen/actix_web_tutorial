@@ -29,7 +29,7 @@ async fn main() -> std::io::Result<()> {
     HttpServer::new(move || {
         App::new()
             .app_data(web::Data::new(todos.clone()))
-            .service(web::scope("/api").service(get_todos))
+            .service(web::scope("/api").service(web::scope("/todos").service(get_todos)))
     })
     .bind(("127.0.0.1", 8080))?
     .run()
