@@ -1,11 +1,10 @@
-http://localhost:8080/api/todos/
+GET http://localhost:8080/api/todos
 
 ###
 
-POST http://localhost:8080/echo
+POST http://localhost:8080/api/todos
 Content-Type: application/json
 
 {
-    "name": "John Doe",
-    "email": "john.doe@example.com"
+    "todo": "Do 15 consecutive pushups (NO BREAK!)"
 }
