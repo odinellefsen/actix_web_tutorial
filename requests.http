@@ -6,5 +6,5 @@ POST http://localhost:8080/api/todos
 Content-Type: application/json
 
 {
-    "todo": "Do 15 consecutive pushups (NO BREAK!)"
+    "todo": "Brush Teeth!"
 }

@@ -48,6 +48,13 @@ async fn create_todo(
 async fn main() -> std::io::Result<()> {
     let todos: Todos = Arc::new(Mutex::new(Vec::new()));
 
+    {
+        let mut t = todos.lock().unwrap();
+        t.push("Read Textbook 'Database System Concepts'".to_string());
+        t.push("Do 15 consecutive pushups (NO BREAK!)".to_string());
+        t.push("Brush Teeth!".to_string());
+    }
+
     HttpServer::new(move || {
         App::new().app_data(web::Data::new(todos.clone())).service(
             web::scope("/api")
