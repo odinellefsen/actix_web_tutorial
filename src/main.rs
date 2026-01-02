@@ -1,4 +1,4 @@
-use actix_web::{App, HttpResponse, HttpServer, Responder, get, post, web};
+use actix_web::{App, HttpResponse, HttpServer, Responder, delete, get, post, web};
 use rand::Rng;
 use serde::{Deserialize, Serialize};
 use std::sync::{Arc, Mutex};
@@ -59,6 +59,31 @@ async fn create_todo(
     HttpResponse::Ok().json(response)
 }
 
+#[derive(Deserialize)]
+struct DeleteTodoRequest {
+    todo_id: usize,
+}
+
+#[delete("")]
+async fn delete_todo(
+    payload: web::Json<DeleteTodoRequest>,
+    todos: web::Data<Todos>,
+) -> impl Responder {
+    let mut todos = todos.lock().unwrap();
+
+    match todos.iter().position(|t| t.id == payload.todo_id) {
+        Some(index) => {
+            todos.remove(index);
+            let response = TodosResponse {
+                message: "Todo deleted successfully",
+                todos: todos.clone(),
+            };
+            HttpResponse::Ok().json(response)
+        }
+        None => HttpResponse::NotFound().json("Todo not found"),
+    }
+}
+
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     let todos: Todos = Arc::new(Mutex::new(Vec::new()));
@@ -82,8 +107,12 @@ async fn main() -> std::io::Result<()> {
 
     HttpServer::new(move || {
         App::new().app_data(web::Data::new(todos.clone())).service(
-            web::scope("/api")
-                .service(web::scope("/todos").service(get_todos).service(create_todo)),
+            web::scope("/api").service(
+                web::scope("/todos")
+                    .service(get_todos)
+                    .service(create_todo)
+                    .service(delete_todo),
+            ),
         )
     })
     .bind(("127.0.0.1", 8080))?

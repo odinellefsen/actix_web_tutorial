@@ -6,5 +6,14 @@ POST http://localhost:8080/api/todos
 Content-Type: application/json
 
 {
-    "todo": "Brush Teeth!"
+    "todo": "Stop Coding!"
+}
+
+###
+
+DELETE http://localhost:8080/api/todos
+Content-Type: application/json
+
+{
+    "todo_id": 911
 }
