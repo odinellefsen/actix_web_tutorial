@@ -1,13 +1,20 @@
 use actix_web::{App, HttpResponse, HttpServer, Responder, get, post, web};
+use rand::Rng;
 use serde::{Deserialize, Serialize};
 use std::sync::{Arc, Mutex};
 
-type Todos = Arc<Mutex<Vec<String>>>;
+type Todos = Arc<Mutex<Vec<Todo>>>;
+
+#[derive(Clone, Serialize, Deserialize)]
+struct Todo {
+    id: usize,
+    text: String,
+}
 
 #[derive(Serialize)]
 struct TodosResponse {
     message: &'static str,
-    todos: Vec<String>,
+    todos: Vec<Todo>,
 }
 
 #[get("")]
@@ -16,7 +23,7 @@ async fn get_todos(todos: web::Data<Todos>) -> impl Responder {
 
     let response = TodosResponse {
         message: "These are your todos",
-        todos: (*todos_guard).clone(),
+        todos: todos_guard.clone(),
     };
 
     HttpResponse::Ok().json(response)
@@ -34,11 +41,19 @@ async fn create_todo(
 ) -> impl Responder {
     let mut todos = todos.lock().unwrap();
 
-    todos.push(payload.todo.clone());
+    let mut rng = rand::thread_rng();
+    let id = rng.gen_range(100..=999);
+
+    let new_todo = Todo {
+        id,
+        text: payload.todo.clone(),
+    };
+
+    todos.push(new_todo);
 
     let response = TodosResponse {
         message: "Todo Created!",
-        todos: (*todos).clone(),
+        todos: todos.clone(),
     };
 
     HttpResponse::Ok().json(response)
@@ -50,9 +65,19 @@ async fn main() -> std::io::Result<()> {
 
     {
         let mut t = todos.lock().unwrap();
-        t.push("Read Textbook 'Database System Concepts'".to_string());
-        t.push("Do 15 consecutive pushups (NO BREAK!)".to_string());
-        t.push("Brush Teeth!".to_string());
+
+        t.push(Todo {
+            id: 100,
+            text: "Read Textbook 'Database System Concepts'".to_string(),
+        });
+        t.push(Todo {
+            id: 101,
+            text: "Do 15 consecutive pushups (NO BREAK!)".to_string(),
+        });
+        t.push(Todo {
+            id: 102,
+            text: "Brush Teeth!".to_string(),
+        });
     }
 
     HttpServer::new(move || {
