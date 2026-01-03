@@ -6,7 +6,14 @@ POST http://localhost:8080/api/todos
 Content-Type: application/json
 
 {
-    "todo": "Stop Coding!"
+    "todo": "Ger 15 armboyggingar uttan pausu."
+}
+
+POST http://localhost:8080/api/todos
+Content-Type: application/json
+
+{
+    "todo": "Dansa í Luux"
 }
 
 ###
@@ -15,5 +22,5 @@ DELETE http://localhost:8080/api/todos
 Content-Type: application/json
 
 {
-    "todo_id": 911
+    "todo_id": 825
 }

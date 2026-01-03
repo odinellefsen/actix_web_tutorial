@@ -86,34 +86,17 @@ async fn delete_todo(
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    let todos: Todos = Arc::new(Mutex::new(Vec::new()));
-
-    {
-        let mut t = todos.lock().unwrap();
-
-        t.push(Todo {
-            id: 100,
-            text: "Read Textbook 'Database System Concepts'".to_string(),
-        });
-        t.push(Todo {
-            id: 101,
-            text: "Do 15 consecutive pushups (NO BREAK!)".to_string(),
-        });
-        t.push(Todo {
-            id: 102,
-            text: "Brush Teeth!".to_string(),
-        });
-    }
-
     HttpServer::new(move || {
-        App::new().app_data(web::Data::new(todos.clone())).service(
-            web::scope("/api").service(
-                web::scope("/todos")
-                    .service(get_todos)
-                    .service(create_todo)
-                    .service(delete_todo),
-            ),
-        )
+        App::new()
+            .app_data(web::Data::new(Arc::new(Mutex::new(Vec::<Todo>::new()))))
+            .service(
+                web::scope("/api").service(
+                    web::scope("/todos")
+                        .service(get_todos)
+                        .service(create_todo)
+                        .service(delete_todo),
+                ),
+            )
     })
     .bind(("127.0.0.1", 8080))?
     .run()
