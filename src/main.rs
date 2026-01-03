@@ -2,6 +2,7 @@ use actix_cors::Cors;
 use actix_web::{App, HttpServer, web};
 use std::sync::{Arc, Mutex};
 
+mod middleware;
 mod todos;
 use todos::handlers::{create_todo, delete_todo, get_todos};
 use todos::structs::Todo;
