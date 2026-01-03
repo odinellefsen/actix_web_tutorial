@@ -4,6 +4,7 @@ use std::sync::{Arc, Mutex};
 
 mod middleware;
 mod todos;
+use middleware::SayHi;
 use todos::handlers::{create_todo, delete_todo, get_todos};
 use todos::structs::Todo;
 
@@ -26,6 +27,7 @@ async fn main() -> std::io::Result<()> {
                     .allowed_header(actix_web::http::header::CONTENT_TYPE)
                     .max_age(3600),
             )
+            .wrap(SayHi)
             .app_data(shared_todos.clone())
             .service(
                 web::scope("/api").service(
