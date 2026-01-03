@@ -1,2 +1,2 @@
 pub mod handlers;
-pub mod todos;
+pub mod structs;

@@ -2,7 +2,7 @@
 use actix_web::{HttpResponse, Responder, delete, get, post, web};
 use rand::Rng;
 
-use crate::todos::todos::{CreateTodoRequest, DeleteTodoRequest, Todo, TodosResponse};
+use crate::todos::structs::{CreateTodoRequest, DeleteTodoRequest, Todo, TodosResponse};
 
 type Todos = std::sync::Arc<std::sync::Mutex<Vec<Todo>>>;
 

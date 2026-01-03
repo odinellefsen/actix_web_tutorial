@@ -3,7 +3,7 @@ use std::sync::{Arc, Mutex};
 
 mod todos;
 use todos::handlers::{create_todo, delete_todo, get_todos};
-use todos::todos::Todo;
+use todos::structs::Todo;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
