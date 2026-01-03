@@ -24,5 +24,5 @@ DELETE http://localhost:8080/api/todos
 Content-Type: application/json
 
 {
-    "todo_id": 825
+    "todo_id": 606
 }
