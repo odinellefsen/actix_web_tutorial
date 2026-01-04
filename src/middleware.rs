@@ -55,7 +55,6 @@ where
 
         Box::pin(async move {
             let res = fut.await?;
-
             println!("Hi from response");
             Ok(res)
         })
